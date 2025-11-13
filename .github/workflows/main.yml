@@ -36,6 +36,7 @@ jobs:
 
   test:
     runs-on: self-hosted
+    needs: build
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
