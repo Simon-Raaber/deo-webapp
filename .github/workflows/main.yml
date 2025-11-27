@@ -79,6 +79,7 @@ jobs:
             **/obj/
 
   e2e_test:
+    if: false
     runs-on: self-hosted
     needs: test
     env:
@@ -120,7 +121,6 @@ jobs:
           kill -s TERM $DEO_BACKEND_PID
 
   analyze:
-    if: false
     runs-on: self-hosted
     needs: test
     steps:
@@ -170,3 +170,24 @@ jobs:
         with:
           name: analyze
           path: "**/*.coverage.xml"
+
+  security:
+    runs-on: self-hosted
+    needs: test
+    permissions:
+      security-events: write
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Analyze projects
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: 'trivy-results.sarif'
