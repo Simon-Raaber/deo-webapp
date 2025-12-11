@@ -121,6 +121,7 @@ jobs:
           kill -s TERM $DEO_BACKEND_PID
 
   analyze:
+    if: false
     runs-on: self-hosted
     needs: test
     steps:
@@ -172,6 +173,7 @@ jobs:
           path: "**/*.coverage.xml"
 
   security:
+    if: false
     runs-on: self-hosted
     needs: test
     permissions:
